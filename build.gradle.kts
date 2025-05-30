@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.cowary"
-version = "1.0-SNAPSHOT"
+version = "0.0.2"
 
 repositories {
     mavenCentral()
@@ -29,22 +29,19 @@ kotlin {
 }
 
 application {
-    mainClass.set("MainKt")
+    mainClass.set("org.cowary.MainKt")
 }
 
 tasks {
-    named<Jar>("jar") {
-        archiveFileName.set("app.jar") // Фиксированное имя файла
+    named<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar>("shadowJar") {
         manifest {
-            attributes["Main-Class"] = "MainKt"
+            attributes(mapOf("Main-Class" to "org.cowary.MainKt"))
         }
     }
 }
 
-tasks.withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
-    archiveFileName.set("app.jar")
-    mergeServiceFiles()
+tasks.withType<Jar> {
     manifest {
-        attributes["Main-Class"] = "MainKt"
+        attributes["Main-Class"] = "org.cowary.MainKt"
     }
 }
