@@ -6,6 +6,7 @@ import com.github.kotlintelegrambot.dispatcher.callbackQuery
 import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.entities.ChatId
+import com.github.kotlintelegrambot.logging.LogLevel
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,6 +17,7 @@ class TelegramBot(
     val handler: BotHandler
 ) {
     val bot = bot {
+        logLevel = LogLevel.All()
         this.token = token
         dispatch {
             command("start") {
@@ -44,6 +46,9 @@ class TelegramBot(
 
     fun startPolling() {
         bot.startPolling()
+//        bot {
+//            logLevel = LogLevel.All()
+//        }
     }
 
     fun sendMessage(userId: Long, text: String) {
