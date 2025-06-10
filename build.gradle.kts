@@ -5,7 +5,7 @@ plugins {
 }
 
 group = "org.cowary"
-version = "0.0.2"
+version = "0.0.4"
 
 repositories {
     mavenCentral()
@@ -14,11 +14,12 @@ repositories {
 
 dependencies {
     testImplementation(kotlin("test"))
-    implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.0.6")
+    implementation("io.github.kotlin-telegram-bot.kotlin-telegram-bot:telegram:6.3.0")
     implementation("io.ktor:ktor-client-core:2.3.3")
     implementation("io.ktor:ktor-client-cio:2.3.3")
     implementation("io.ktor:ktor-client-content-negotiation:2.3.3")
     implementation("io.ktor:ktor-serialization-gson:2.3.3")
+    implementation("io.ktor:ktor-server-netty:2.3.3")
 }
 
 tasks.test {

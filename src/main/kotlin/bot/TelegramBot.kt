@@ -6,30 +6,37 @@ import com.github.kotlintelegrambot.dispatcher.callbackQuery
 import com.github.kotlintelegrambot.dispatcher.command
 import com.github.kotlintelegrambot.dispatcher.text
 import com.github.kotlintelegrambot.entities.ChatId
+import com.github.kotlintelegrambot.logging.LogLevel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 
 class TelegramBot(
     token: String,
-    private val handler: BotHandler
+    val handler: BotHandler
 ) {
-    private val bot = bot {
+    val bot = bot {
+        logLevel = LogLevel.All()
         this.token = token
         dispatch {
             command("start") {
-                val response = handler.handleStart()
+                val userId = message.chat.id
+                val response = handler.handleStart(userId)
                 bot.sendMessage(
-                    chatId = ChatId.fromId(message.chat.id),
+                    chatId = ChatId.fromId(userId),
                     text = response.text,
                     replyMarkup = response.replyMarkup
                 )
             }
 
             callbackQuery("fetch_data") {
-                // Добавляем корутину для вызова suspend-функции
+                println("fetch_data")
+                val userId = callbackQuery.message?.chat?.id ?: return@callbackQuery
                 runBlocking {
-                    val response = handler.handleButtonClick()
+                    val response = handler.handleButtonClick(userId)
                     bot.sendMessage(
-                        chatId = ChatId.fromId(callbackQuery.message?.chat?.id ?: return@runBlocking),
+                        chatId = ChatId.fromId(userId),
                         text = response.text
                     )
                 }
@@ -39,5 +46,16 @@ class TelegramBot(
 
     fun startPolling() {
         bot.startPolling()
+//        bot {
+//            logLevel = LogLevel.All()
+//        }
     }
+
+    fun sendMessage(userId: Long, text: String) {
+        bot.sendMessage(
+            chatId = ChatId.fromId(userId),
+            text = text
+        )
+    }
+
 }

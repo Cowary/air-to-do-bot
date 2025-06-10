@@ -13,7 +13,7 @@ interface ApiClient {
 }
 
 class RealApiClient : ApiClient {
-    val urlApi = System.getenv("API_URL") ?: error("Не задан API_URL в переменных окружения")
+    private val urlApi = System.getenv("API_URL") ?: error("Не задан API_URL в переменных окружения")
 
     private val client = HttpClient {
         install(io.ktor.client.plugins.contentnegotiation.ContentNegotiation) {
@@ -24,6 +24,7 @@ class RealApiClient : ApiClient {
     override suspend fun fetchData(): String {
         val response: HttpResponse = client.get(urlApi)
         return if (response.status == HttpStatusCode.OK) {
+            println("Response body: $response")
             response.body()
         } else {
             println("Ошибка при получении данных " + response.status)
